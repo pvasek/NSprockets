@@ -8,16 +8,17 @@ using System.IO;
 namespace NSprockets.Tests
 {
     [TestFixture]
-    public class NSprocketsToolTest
+    public class AssetLoaderTest
     {
         [Test]
         public void InitializeTest()
-        {
-            var target = new NSprocketsTool();
-            Uri uri = new Uri(Path.GetDirectoryName(typeof(NSprocketsToolTest).Assembly.CodeBase));
+        {            
+            Uri uri = new Uri(Path.GetDirectoryName(typeof(AssetLoaderTest).Assembly.CodeBase));
             var dir = Path.Combine(uri.AbsolutePath, "assets");
-            target.LookupDirectories.Add(dir);
-            target.Initialize();
+            var lookupDirectories = new List<string>();
+            lookupDirectories.Add(dir);
+
+            var target = new AssetLoader(lookupDirectories);
             Assert.AreEqual(5, target.Directories.Count);
             Assert.AreEqual(6, target.Files.Count);
         }

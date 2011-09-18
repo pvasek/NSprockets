@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asset.cs" />
+    <Compile Include="AssetLoader.cs" />
+    <Compile Include="AssetType.cs" />
     <Compile Include="Directive.cs" />
     <Compile Include="DirectiveType.cs" />
     <Compile Include="FilePointer.cs" />
