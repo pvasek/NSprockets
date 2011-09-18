@@ -69,7 +69,7 @@
     <Content Include="assets\scripts1\scripts1.2\test1.2.b.js" />
     <Content Include="assets\scripts1\scripts1.2\test1.2.a.js" />
     <Content Include="assets\scripts1\test1.b.js" />
-    <Content Include="assets\scripts1\test1.a.js" />
+    <Content Include="assets\scripts1\test1.A.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

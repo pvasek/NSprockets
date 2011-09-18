@@ -20,8 +20,8 @@ namespace NSprockets.Tests
 body {}
 h1 {}
 *= require test3  ";
-            string result = @"body {}
-h1 {}";
+//            string result = @"body {}
+//h1 {}";
             var context = new TestParserContext();
             target.Parse(new StringReader(content), context);
 

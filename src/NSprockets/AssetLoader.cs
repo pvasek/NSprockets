@@ -10,32 +10,37 @@ namespace NSprockets
     {
         public AssetLoader(IEnumerable<string> lookupDirectories)
         {
-            Files = new List<string>();
-            Directories = new List<string>();
-            WalkThrough(lookupDirectories, Directories, Files);
-        }
-
-        private void WalkThrough(IEnumerable<string> throughDirectories, List<string> directories, List<string> files)
-        {
-            foreach (var item in throughDirectories)
+            Assets = new List<Asset>();
+            foreach (var dir in lookupDirectories)
             {
-                directories.Add(item);
-                files.AddRange(Directory.GetFiles(item));
-                WalkThrough(Directory.GetDirectories(item).ToList(), directories, files);
+                WalkThrough(dir, dir);
             }
         }
 
-        public List<string> Files { get; private set; }
-        public List<string> Directories { get; private set; }
-
-        public List<string> GetTree(string dir)
+        private void WalkThrough(string dir, string rootDir)
         {
-            throw new NotImplementedException();
+            Assets.AddRange(Directory.GetFiles(dir).Select(i => new Asset(this, i, rootDir)));
+            foreach (var subdir in Directory.GetDirectories(dir))
+            {
+                WalkThrough(subdir, rootDir);
+            }
         }
 
-        public List<string> GetDirectory(string dir)
+        public List<Asset> Assets { get; private set; }
+
+        public IEnumerable<Asset> FromTree(string dir)
         {
-            throw new NotImplementedException();
+            return Assets.Where(i => i.IsInTree(dir));
+        }
+
+        public IEnumerable<Asset> FromDirectory(string dir)
+        {
+            return Assets.Where(i => i.IsInDirectory(dir));
+        }
+
+        public Asset Load(string name)
+        {
+            return Assets.First(i => i.HasName(name)).Load();
         }
 
     }

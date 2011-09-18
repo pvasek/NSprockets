@@ -19,8 +19,7 @@ namespace NSprockets.Tests
             target.AddDirective("require_tree tree1");
             target.AddDirective("require_tree tree2 tree3");
             Assert.AreEqual(7, target.Directives.Count);
-            Assert.AreEqual("current.js", target.Directives[0].Parameter);
-            Assert.AreEqual(DirectiveType.Require, target.Directives[0].Type);
+            Assert.AreEqual(DirectiveType.RequireSelf, target.Directives[0].Type);
             Assert.AreEqual("test1.js", target.Directives[1].Parameter);
             Assert.AreEqual("test2.js", target.Directives[2].Parameter);
             Assert.AreEqual("test3.js", target.Directives[3].Parameter);

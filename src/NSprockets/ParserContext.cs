@@ -32,7 +32,7 @@ namespace NSprockets
             
             if (directiveType == DirectiveType.RequireSelf)
             {
-                Directives.Add(new Directive(DirectiveType.Require, _currentFile));
+                Directives.Add(new Directive(DirectiveType.RequireSelf, _currentFile));
             }
             else
             {

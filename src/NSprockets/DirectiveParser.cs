@@ -10,6 +10,25 @@ namespace NSprockets
     {        
         private string _lineStart;
 
+        public static DirectiveParser CssParser { get; private set; }
+        public static DirectiveParser JsParser { get; private set; }
+
+        public static DirectiveParser ForType(AssetType assetType)
+        {
+            if (assetType == AssetType.Css)
+                return CssParser;
+            else if (assetType == AssetType.Js)
+                return JsParser;
+            else
+                return null;
+        }
+
+        static DirectiveParser()
+        {
+            CssParser = new DirectiveParser("*=");
+            JsParser = new DirectiveParser("//=");
+        }
+
         public DirectiveParser(string lineStart)
         {
             _lineStart = lineStart;
