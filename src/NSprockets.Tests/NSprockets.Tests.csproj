@@ -66,6 +66,9 @@
   <ItemGroup>
     <Content Include="assets\scripts1\scripts1.1\scripts1.1.1\test1.1.1.b.js" />
     <Content Include="assets\scripts1\scripts1.1\scripts1.1.1\test1.1.1.a.js" />
+    <Content Include="assets\scripts1\scripts1.1\test1.1.a.js" />
+    <Content Include="assets\scripts1\scripts1.2\scripts1.2.1\test1.1.2.1.b.js" />
+    <Content Include="assets\scripts1\scripts1.2\scripts1.2.1\test1.1.2.1.a.js" />
     <Content Include="assets\scripts1\scripts1.2\test1.2.b.js" />
     <Content Include="assets\scripts1\scripts1.2\test1.2.a.js" />
     <Content Include="assets\scripts1\test1.b.js" />

@@ -43,5 +43,25 @@ namespace NSprockets
             return Assets.First(i => i.HasName(name)).Load();
         }
 
+        private void ForAssetTree(Asset root, Action<Asset> action)
+        {
+            action(root);
+            foreach (var item in root.Children)
+            {
+                ForAssetTree(item, action);
+            }
+        }
+
+        public List<string> GetFiles(IEnumerable<string> files)
+        {
+            var result = new List<string>();
+            foreach (var asset in files.Select(i => Load(i)))
+            {
+                ForAssetTree(asset, i => {
+                    result.Add(i.FileName);
+                });
+            }
+            return result.Distinct().ToList();
+        }
     }
 }

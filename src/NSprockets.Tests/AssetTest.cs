@@ -49,7 +49,7 @@ namespace NSprockets.Tests
             Assert.AreEqual(true, result4.IsInTree("jquery.ui/styles"));
 
             Assert.AreEqual(true, result4.IsInDirectory("jquery.ui/styles"));
-            Assert.AreEqual(false, result4.IsInDirectory("styles"));
+            Assert.AreEqual(true, result4.IsInDirectory("styles"));
             Assert.AreEqual(false, result4.IsInDirectory("jquery.ui"));
 
             Assert.AreEqual(true, result4.HasName("jquery.1.5.css"));

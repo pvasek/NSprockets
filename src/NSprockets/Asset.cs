@@ -64,7 +64,7 @@ namespace NSprockets
         public bool IsInDirectory(string dir)
         {
             dir = dir.ToLower();
-            return dir == Directory;
+            return dir == Directory || Directory.EndsWith("/" + dir);
         }
 
         public bool IsInTree(string dir)

@@ -1,1 +1,2 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿//= require_tree scripts1.1
+//= require_directory scripts1.2
