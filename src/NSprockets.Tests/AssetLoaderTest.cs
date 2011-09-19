@@ -54,5 +54,22 @@ namespace NSprockets.Tests
             Assert.AreEqual("test1.2.a.js", files[4]);
             Assert.AreEqual("test1.2.b.js", files[5]);
         }
+
+        [Test]
+        public void GetContentTest()
+        {
+            var target = new AssetLoader(_lookupDirectories);
+            var content = target.GetContent("test1.b.js");
+            var expectedResult = 
+@"var test1_b
+var test1_b = """";
+var test1_1_a = """";
+var test1_1_1_a = """";
+var test1_1_1_b = """";
+var test1_2_a = """";
+var test1_2_b = """";";
+
+            Assert.AreEqual(expectedResult, content);
+        }
     }
 }

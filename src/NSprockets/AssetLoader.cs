@@ -63,5 +63,15 @@ namespace NSprockets
             }
             return result.Distinct().ToList();
         }
+
+        public string GetContent(string file)
+        {
+            var result = new StringBuilder();
+            ForAssetTree(Load(file), i =>
+            {
+                result.AppendLine(i.Content);
+            });
+            return result.ToString();
+        }
     }
 }
