@@ -66,10 +66,10 @@ namespace NSprockets
 
         public string GetContent(string file)
         {
-            var result = new StringBuilder();
+            var result = new StringWriter();
             ForAssetTree(Load(file), i =>
             {
-                result.AppendLine(i.Content);
+                result.Write(i.Content);
             });
             return result.ToString();
         }

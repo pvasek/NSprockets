@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace NSprockets
 {   
@@ -13,6 +14,7 @@ namespace NSprockets
         public ParserContext(string currentFile)
         {
             Directives = new List<Directive>();
+            FilteredContent = new StringWriter();
             _currentFile = currentFile;
             _typeMap.Add("require", DirectiveType.Require);
             _typeMap.Add("require_self", DirectiveType.RequireSelf);
@@ -22,6 +24,7 @@ namespace NSprockets
         }
 
         public List<Directive> Directives { get; private set; }
+        public StringWriter FilteredContent { get; private set; }
 
         public void AddDirective(string directiveText)
         {

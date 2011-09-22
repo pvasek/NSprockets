@@ -61,15 +61,14 @@ namespace NSprockets.Tests
             var target = new AssetLoader(_lookupDirectories);
             var content = target.GetContent("test1.b.js");
             var expectedResult = 
-@"var test1_b
-var test1_b = """";
+@"var test1_b = """";
 var test1_1_a = """";
 var test1_1_1_a = """";
 var test1_1_1_b = """";
 var test1_2_a = """";
 var test1_2_b = """";";
 
-            Assert.AreEqual(expectedResult, content);
+            Assert.AreEqual(expectedResult, content.Trim());
         }
     }
 }

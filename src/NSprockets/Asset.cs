@@ -99,6 +99,11 @@ namespace NSprockets
         {
             var context = new ParserContext(Name);
             parser.Parse(new StringReader(Content), context);
+            var newContent = context.FilteredContent.ToString();
+            if (newContent != String.Empty)
+            {
+                Content = newContent;
+            }
 
             foreach (var directive in context.Directives)
             {

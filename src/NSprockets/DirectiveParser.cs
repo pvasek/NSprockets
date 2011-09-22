@@ -45,6 +45,10 @@ namespace NSprockets
                     var directive = text.Remove(0, _lineStart.Length);
                     context.AddDirective(directive);
                 }
+                else
+                {
+                    context.FilteredContent.WriteLine(line);
+                }
                 line = reader.ReadLine();
             }
         }
