@@ -6,16 +6,19 @@ using System.IO;
 
 namespace NSprockets
 {
-    public class AssetLoader
+    public class AssetLoader : IAssetLoader
     {
-        public AssetLoader(IEnumerable<string> lookupDirectories)
+        public AssetLoader(IEnumerable<string> lookupDirectories, IEnumerable<IAssetProcessor> processors)
         {
             Assets = new List<Asset>();
             foreach (var dir in lookupDirectories)
             {
                 WalkThrough(dir, dir);
             }
+            _processors = new List<IAssetProcessor>(processors);
         }
+
+        private List<IAssetProcessor> _processors;
 
         private void WalkThrough(string dir, string rootDir)
         {
@@ -72,6 +75,11 @@ namespace NSprockets
                 result.Write(i.Content);
             });
             return result.ToString();
+        }
+
+        public IAssetProcessor FindProcessor(string extension)
+        {
+            return _processors.First(i => i.IsForExtension(extension));
         }
     }
 }

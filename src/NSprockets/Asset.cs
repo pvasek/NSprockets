@@ -8,7 +8,7 @@ namespace NSprockets
 {
     public class Asset
     {
-        public Asset(AssetLoader loader, string fileName, string rootDir)
+        public Asset(IAssetLoader loader, string fileName, string rootDir)
         {
             _loader = loader;
             FullFileName = fileName;            
@@ -26,8 +26,9 @@ namespace NSprockets
 
         private bool _loaded = false;
         private object _syncRoot = new Object();
-        private readonly AssetLoader _loader;
+        private readonly IAssetLoader _loader;
         private readonly List<Asset> _children;
+        private string _finalExtension;
 
         private void CheckType(AssetType type, string file)
         {
@@ -36,6 +37,7 @@ namespace NSprockets
             if (tmp.EndsWith(rootExtension) || tmp.Contains(rootExtension + "."))
             {
                 Type = type;
+                _finalExtension = "." + Type.ToString().ToLower();
                 int extensionStart = tmp.IndexOf(rootExtension);
                 Extension = tmp.Substring(extensionStart, tmp.Length - extensionStart);
                 var name = Path.GetFileName(tmp); 
@@ -91,7 +93,24 @@ namespace NSprockets
                 {
                     Parse(parser);
                 }
+                ProcessContent();
                 return this;
+            }
+        }
+
+        private void ProcessContent()
+        {
+            if (Extension != _finalExtension)
+            {
+                var parts = Extension.Split('.')
+                    .Where(i => !String.IsNullOrWhiteSpace(i))
+                    .Select(i => "." + i);
+                var processor = _loader.FindProcessor(parts.Reverse().First());
+                var processorContext = new ProcessorContext();
+                processor.Parse(new StringReader(Content), processorContext);
+                Extension = String.Join("", parts.Reverse().Skip(1).Reverse().ToArray());
+                Content = processorContext.Output.ToString();
+                ProcessContent();
             }
         }
 

@@ -34,6 +34,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\comp\moq\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit-gui-runner">
       <HintPath>..\..\comp\nunit\nunit-gui-runner.dll</HintPath>
     </Reference>
@@ -67,6 +70,7 @@
     <Content Include="assets\scripts1\scripts1.1\scripts1.1.1\test1.1.1.b.js" />
     <Content Include="assets\scripts1\scripts1.1\scripts1.1.1\test1.1.1.a.js" />
     <Content Include="assets\scripts1\scripts1.1\test1.1.a.js" />
+    <None Include="assets\scripts2\test2.a.js.coffee" />
     <Content Include="assets\scripts1\scripts1.2\scripts1.2.1\test1.1.2.1.b.js" />
     <Content Include="assets\scripts1\scripts1.2\scripts1.2.1\test1.1.2.1.a.js" />
     <Content Include="assets\scripts1\scripts1.2\test1.2.b.js" />

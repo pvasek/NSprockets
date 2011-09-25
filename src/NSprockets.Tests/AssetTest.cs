@@ -3,12 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using System.IO;
+using Moq;
 
 namespace NSprockets.Tests
 {
     [TestFixture]
     public class AssetTest
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Uri uri = new Uri(Path.GetDirectoryName(typeof(AssetTest).Assembly.CodeBase));
+            _assetsRootDir = Path.Combine(uri.AbsolutePath, "assets");
+        }
+
+        private string _assetsRootDir; 
+
         [Test]
         public void JsAsset1Test()
         {
@@ -54,6 +65,47 @@ namespace NSprockets.Tests
 
             Assert.AreEqual(true, result4.HasName("jquery.1.5.css"));
             Assert.AreEqual(true, result4.HasName("jquery.1.5"));
+        }
+
+        [Test]
+        public void LoadTest1()
+        {
+            Asset target = new Asset(null, Path.Combine(_assetsRootDir, "scripts1/scripts1.2/test1.2.b.js"), _assetsRootDir);
+            target.Load();
+            Assert.AreEqual("var test1_2_b = \"\";", target.Content.Trim());
+        }
+
+        [Test]
+        public void LoadTest2()
+        {
+            // this doesn't work, I have no idea why
+            //var processorMock = new Mock<IAssetProcessor>();
+            //processorMock.Setup(i => i.IsForExtension(".coffee")).Returns(true);
+            //processorMock.Setup(i => i.Parse(null, null))
+            //    .Callback(delegate (TextReader input, IProcessorContext context){
+            //        context.Output.Write("coffee");
+            //    });
+            var processorMock = new MockProcessor();
+
+            var assetLoaderMock = new Mock<IAssetLoader>();
+            assetLoaderMock.Setup(i => i.FindProcessor(".coffee")).Returns(processorMock);
+            Asset target = new Asset(assetLoaderMock.Object, Path.Combine(_assetsRootDir, "scripts2/test2.a.js.coffee"), _assetsRootDir);
+            target.Load();
+            Assert.AreEqual("coffee", target.Content.Trim());
+ 
+        }
+
+        private class MockProcessor: IAssetProcessor
+        {
+            public bool IsForExtension(string extension)
+            {
+                return true;
+            }
+
+            public void Parse(TextReader reader, IProcessorContext context)
+            {
+                context.Output.Write("coffee");
+            }
         }
     }
 }

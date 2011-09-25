@@ -10,7 +10,6 @@ namespace NSprockets
     {
         private DirectiveParser _cssParser;
         private DirectiveParser _jsParser;
-        private List<FilePointer> _requiredFiles = new List<FilePointer>();
 
         public NSprocketsTool()
         {
@@ -24,17 +23,6 @@ namespace NSprockets
         public string DefaultOutputDirectory { get; set; }
         public List<IAssetProcessor> Processors { get; private set; }
       
-        private void Require(string file) 
-        { 
-        }
-
-        private void RequireTree(string rootDir)
-        {
-        }
-
-        private void RequireDirectory(string dir)
-        {
-        }
     }
     
 }

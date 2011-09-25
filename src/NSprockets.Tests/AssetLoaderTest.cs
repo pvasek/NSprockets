@@ -23,9 +23,9 @@ namespace NSprockets.Tests
 
         [Test]
         public void BasicTest()
-        {            
-            var target = new AssetLoader(_lookupDirectories);
-            Assert.AreEqual(9, target.Assets.Count);
+        {
+            var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
+            Assert.AreEqual(10, target.Assets.Count);
             Assert.AreEqual(1, target.FromDirectory("scripts1.1").Count());
             Assert.AreEqual(4, target.FromTree("scripts1.2").Count());
         }
@@ -33,7 +33,7 @@ namespace NSprockets.Tests
         [Test]
         public void LoadTest()
         {
-            var target = new AssetLoader(_lookupDirectories);
+            var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             Asset result1 = target.Load("test1.a.js");
             Assert.AreEqual(1, result1.Children.Count());
 
@@ -44,7 +44,7 @@ namespace NSprockets.Tests
         [Test]
         public void GetFilesTest()
         {
-            var target = new AssetLoader(_lookupDirectories);
+            var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var files = target.GetFiles(new string[]{ "test1.b.js" });
             Assert.AreEqual(6, files.Count);
             Assert.AreEqual("test1.b.js", files[0]);
@@ -58,7 +58,7 @@ namespace NSprockets.Tests
         [Test]
         public void GetContentTest()
         {
-            var target = new AssetLoader(_lookupDirectories);
+            var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var content = target.GetContent("test1.b.js");
             var expectedResult = 
 @"var test1_b = """";

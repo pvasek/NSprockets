@@ -45,7 +45,7 @@
     <Compile Include="AssetType.cs" />
     <Compile Include="Directive.cs" />
     <Compile Include="DirectiveType.cs" />
-    <Compile Include="FilePointer.cs" />
+    <Compile Include="IAssetLoader.cs" />
     <Compile Include="IAssetProcessor.cs" />
     <Compile Include="IParserContext.cs" />
     <Compile Include="ParserContext.cs" />
@@ -53,6 +53,7 @@
     <Compile Include="NSprocketsTool.cs" />
     <Compile Include="DirectiveParser.cs" />
     <Compile Include="ProcessorBase.cs" />
+    <Compile Include="ProcessorContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
