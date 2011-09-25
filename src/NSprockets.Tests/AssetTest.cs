@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using System.IO;
 using Moq;
+using NSprockets.Abstract;
 
 namespace NSprockets.Tests
 {

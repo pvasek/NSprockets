@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using System.IO;
+using NSprockets.Abstract;
+using NSprockets.Processors;
 
 namespace NSprockets.Tests
 {
@@ -69,6 +71,14 @@ var test1_2_a = """";
 var test1_2_b = """";";
 
             Assert.AreEqual(expectedResult, content.Trim());
+        }
+
+        [Test]
+        public void GetContentTest2()
+        {
+            var target = new AssetLoader(_lookupDirectories, new[] { new CoffeeScriptProcessor() });
+            var content = target.GetContent("test2.a.js");
+            Assert.AreEqual("var test;\ntest = 5;", content.Trim());
         }
     }
 }

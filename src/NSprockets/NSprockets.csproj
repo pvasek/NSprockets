@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JurassicCoffee.Core">
+      <HintPath>..\..\comp\jurassiccoffee\JurassicCoffee.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,18 +45,19 @@
   <ItemGroup>
     <Compile Include="Asset.cs" />
     <Compile Include="AssetLoader.cs" />
-    <Compile Include="AssetType.cs" />
+    <Compile Include="Abstract\AssetType.cs" />
     <Compile Include="Directive.cs" />
     <Compile Include="DirectiveType.cs" />
-    <Compile Include="IAssetLoader.cs" />
-    <Compile Include="IAssetProcessor.cs" />
-    <Compile Include="IParserContext.cs" />
+    <Compile Include="Abstract\IAssetLoader.cs" />
+    <Compile Include="Abstract\IAssetProcessor.cs" />
+    <Compile Include="Abstract\IParserContext.cs" />
     <Compile Include="ParserContext.cs" />
-    <Compile Include="IProcessorContext.cs" />
+    <Compile Include="Abstract\IProcessorContext.cs" />
     <Compile Include="NSprocketsTool.cs" />
     <Compile Include="DirectiveParser.cs" />
     <Compile Include="ProcessorBase.cs" />
     <Compile Include="ProcessorContext.cs" />
+    <Compile Include="Processors\CoffeeScriptProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

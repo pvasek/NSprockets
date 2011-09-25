@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace NSprockets
+namespace NSprockets.Abstract
 {
     public interface IProcessorContext
     {        

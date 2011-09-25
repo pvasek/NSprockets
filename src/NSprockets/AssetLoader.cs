@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using NSprockets.Abstract;
+using NSprockets.Processors;
 
 namespace NSprockets
 {
@@ -16,6 +18,7 @@ namespace NSprockets
                 WalkThrough(dir, dir);
             }
             _processors = new List<IAssetProcessor>(processors);
+            _processors.Add(new CoffeeScriptProcessor());
         }
 
         private List<IAssetProcessor> _processors;

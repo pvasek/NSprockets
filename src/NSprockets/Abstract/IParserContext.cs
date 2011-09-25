@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace NSprockets
+namespace NSprockets.Abstract
 {
     public interface IParserContext
     {
