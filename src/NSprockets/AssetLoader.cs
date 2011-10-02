@@ -51,11 +51,19 @@ namespace NSprockets
 
         private void ForAssetTree(Asset root, Action<Asset> action)
         {
-            action(root);
+            if (!root.IsManifestOnly)
+            {
+                action(root);
+            }
             foreach (var item in root.Children)
             {
                 ForAssetTree(item, action);
             }
+        }
+
+        public List<string> GetFiles(string file)
+        {
+            return GetFiles(new string[] { file });
         }
 
         public List<string> GetFiles(IEnumerable<string> files)
@@ -63,7 +71,7 @@ namespace NSprockets
             var result = new List<string>();
             foreach (var asset in files.Select(i => Load(i)))
             {
-                ForAssetTree(asset, i => {
+                ForAssetTree(asset, i => {                    
                     result.Add(i.FileName);
                 });
             }

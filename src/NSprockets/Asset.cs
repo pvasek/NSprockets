@@ -9,6 +9,11 @@ namespace NSprockets
 {
     public class Asset
     {
+        private Asset()
+        {
+            _children = new List<Asset>();
+        }
+
         public Asset(IAssetLoader loader, string fileName, string rootDir)
         {
             _loader = loader;
@@ -63,6 +68,23 @@ namespace NSprockets
         public List<string> DirectoryParts { get; private set; }
         public string Content { get; private set; }
         public IEnumerable<Asset> Children { get { return _children; } }
+        public bool IsManifestOnly { get; set; }
+
+        private Asset CreateManifestContentAsset()
+        {
+            IsManifestOnly = true;
+
+            var result = new Asset();
+            result.Name = Name;
+            result.FileName = FileName;
+            result.Extension = Extension;
+            result.Directory = Directory;
+            result.FullFileName = FullFileName;
+            result.Type = Type;
+            result.DirectoryParts = new List<string>(DirectoryParts);
+            result.Content = Content;
+            return result;
+        }
 
         public bool IsInDirectory(string dir)
         {
@@ -142,6 +164,10 @@ namespace NSprockets
                 else if (directive.Type == DirectiveType.Require)
                 {
                     _children.Add(_loader.Load(directive.Parameter));
+                }
+                else if (directive.Type == DirectiveType.RequireSelf)
+                {
+                    _children.Add(CreateManifestContentAsset());
                 }
             }
         }

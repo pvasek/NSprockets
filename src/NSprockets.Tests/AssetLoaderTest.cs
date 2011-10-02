@@ -37,7 +37,7 @@ namespace NSprockets.Tests
         {
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             Asset result1 = target.Load("test1.a.js");
-            Assert.AreEqual(1, result1.Children.Count());
+            Assert.AreEqual(2, result1.Children.Count()); // one real + one from require_self
 
             Asset result2 = target.Load("test1.b.js");
             Assert.AreEqual(5, result2.Children.Count());
@@ -80,5 +80,24 @@ var test1_2_b = """";";
             var content = target.GetContent("test2.a.js");
             Assert.AreEqual("var test;\ntest = 5;", content.Trim());
         }
+
+        [Test]
+        public void GetContentTest3()
+        {
+            var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
+            var content = target.GetContent("test1.a.js");
+            Assert.AreEqual("var test1_1_1_a = \"\";var test1_a = \"\";", content.Trim().Replace("\n", "").Replace("\r", ""));
+        }
+
+        [Test]
+        public void GetFilesTest3()
+        {
+            var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
+            var files = target.GetFiles("test1.a.js");
+            Assert.AreEqual(2, files.Count);
+            Assert.AreEqual("test1.1.1.a.js", files[0]);
+            Assert.AreEqual("test1.a.js", files[1]);
+        }
+
     }
 }
