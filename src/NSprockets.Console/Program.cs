@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using NSprockets.Processors;
 
 namespace NSprockets.Console
 {
@@ -20,10 +19,7 @@ namespace NSprockets.Console
             var tool = new NSprocketsTool();            
             tool.OutputDirectory = args.Length > 1 ? args[1] : Environment.CurrentDirectory;
             tool.LookupDirectories.Add(Path.GetDirectoryName(inputFile));
-            if (minify)
-            {
-                tool.Processors.Add(new JsMinifierProcessor());
-            }
+            tool.Minify = minify;
             tool.Generate(Path.GetFileName(inputFile));
         }
     }

@@ -29,7 +29,7 @@ namespace NSprockets
 
         private AssetLoader GetLoader()
         {
-            return new AssetLoader(LookupDirectories, Processors);
+            return new AssetLoader(LookupDirectories, GetAllProcessors());
         }
 
         #endregion
@@ -45,12 +45,25 @@ namespace NSprockets
             }
         }
 
+        private IEnumerable<IAssetProcessor> GetAllProcessors()
+        {
+            if (Minify)
+            {
+                yield return new JsMinifierProcessor();
+            }
+            foreach (var processor in Processors)
+            {
+                yield return processor;
+            }
+        }
+
         public static NSprocketsTool Current { get; set; }
 
         public List<string> LookupDirectories { get; private set; }
         public string OutputDirectory { get; set; }        
         public List<IAssetProcessor> Processors { get; private set; }
         public bool ConcatToSingleFile { get; set; }
+        public bool Minify { get; set; }       
 
         private string _applicationRootDirectory;
         public string ApplicationRootDirectory

@@ -38,7 +38,7 @@ namespace NSprockets.Example
             RegisterRoutes(RouteTable.Routes);
 
             NSprocketsTool.Current.ConcatToSingleFile = true;
-            NSprocketsTool.Current.Processors.Add(new JsMinifierProcessor());
+            NSprocketsTool.Current.Minify = true;
         }
     }
 }
