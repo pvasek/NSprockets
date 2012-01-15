@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,6 +36,16 @@ namespace NSprockets
 
         #endregion
 
+        private static bool IsConfigurationKeySet(string key, bool defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            if (value == null)
+            {
+                return defaultValue;
+            }
+            return value == "1" || String.Compare(value, "true", StringComparison.CurrentCultureIgnoreCase) == 0;
+        }
+
         static NSprocketsTool()
         {
             Current = new NSprocketsTool();
@@ -42,6 +54,8 @@ namespace NSprockets
                 Current.AddServerLookupDirectory("~/scripts");
                 Current.ApplicationRootDirectory = HttpContext.Current.Server.MapPath("~/");
                 Current.OutputDirectory = HttpContext.Current.Server.MapPath("~/scripts");
+                Current.ConcatToSingleFile = IsConfigurationKeySet("NSprockets.ConcatToSingleFile", true);
+                Current.Minify = IsConfigurationKeySet("NSprockets.Minify", true);
             }
         }
 
@@ -80,7 +94,7 @@ namespace NSprockets
             LookupDirectories.Add(HttpContext.Current.Server.MapPath(virtualPath));
         }
 
-        public string GetScriptFileDeclaration(params string[] files)
+        public IHtmlString GetScriptFileDeclaration(params string[] files)
         {
             var scriptFiles = ConcatToSingleFile
                                   ? files.Select(GetPreprocessedFileName)
@@ -92,8 +106,8 @@ namespace NSprockets
                 sb.Append("<script type=\"text/javascript\" src=\"");
                 sb.Append(file);
                 sb.Append("\"></script>");
-            }
-            return sb.ToString();
+            }            
+            return new HtmlString(sb.ToString());
         }
 
         private string MapToApplicationPath(string fileName)
