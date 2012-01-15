@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 using NSprockets.Abstract;
-using NSprockets.Processors;
 
 namespace NSprockets
 {
@@ -18,10 +16,9 @@ namespace NSprockets
                 WalkThrough(dir, dir);
             }
             _processors = new List<IAssetProcessor>(processors);
-            _processors.Add(new CoffeeScriptProcessor());
         }
 
-        private List<IAssetProcessor> _processors;
+        private readonly List<IAssetProcessor> _processors;
 
         private void WalkThrough(string dir, string rootDir)
         {
@@ -46,7 +43,8 @@ namespace NSprockets
 
         public Asset Load(string name)
         {
-            return Assets.First(i => i.HasName(name)).Load();
+            Asset asset = Assets.First(i => i.HasName(name));
+            return asset.Load();
         }
 
         private void ForAssetTree(Asset root, Action<Asset> action)
@@ -63,17 +61,15 @@ namespace NSprockets
 
         public List<string> GetFiles(string file)
         {
-            return GetFiles(new string[] { file });
+            return GetFiles(new[] { file });
         }
 
         public List<string> GetFiles(IEnumerable<string> files)
         {
             var result = new List<string>();
-            foreach (var asset in files.Select(i => Load(i)))
+            foreach (var asset in files.Select(Load))
             {
-                ForAssetTree(asset, i => {                    
-                    result.Add(i.FileName);
-                });
+                ForAssetTree(asset, i => result.Add(i.FullFileName));
             }
             return result.Distinct().ToList();
         }
@@ -81,16 +77,13 @@ namespace NSprockets
         public string GetContent(string file)
         {
             var result = new StringWriter();
-            ForAssetTree(Load(file), i =>
-            {
-                result.Write(i.Content);
-            });
+            ForAssetTree(Load(file), i => result.Write(i.Content));
             return result.ToString();
         }
 
         public IAssetProcessor FindProcessor(string extension)
         {
-            return _processors.First(i => i.IsForExtension(extension));
+            return _processors.FirstOrDefault(i => i.IsForExtension(extension));
         }
     }
 }

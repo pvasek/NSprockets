@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 using NSprockets.Abstract;
 
@@ -9,8 +7,8 @@ namespace NSprockets
 {   
     public class ParserContext: IParserContext
     {
-        private Dictionary<string, DirectiveType> _typeMap = new Dictionary<string, DirectiveType>();
-        private string _currentFile;        
+        private readonly Dictionary<string, DirectiveType> _typeMap = new Dictionary<string, DirectiveType>();
+        private readonly string _currentFile;        
 
         public ParserContext(string currentFile)
         {

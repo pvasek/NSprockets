@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 using NSprockets.Abstract;
 
 namespace NSprockets
 {
     public class DirectiveParser
     {        
-        private string _lineStart;
+        private readonly string _lineStart;
 
         public static DirectiveParser CssParser { get; private set; }
         public static DirectiveParser JsParser { get; private set; }
@@ -18,10 +14,9 @@ namespace NSprockets
         {
             if (assetType == AssetType.Css)
                 return CssParser;
-            else if (assetType == AssetType.Js)
+            if (assetType == AssetType.Js)
                 return JsParser;
-            else
-                return null;
+            return null;
         }
 
         static DirectiveParser()

@@ -8,7 +8,7 @@ The solution is developed in Microsoft Visual Web Developer 2010 Express. Unit t
 Already Implemented
 -------------------
 Directives in manifest files: require, require_directory, require_tree, require_self.
-Example of coffee preprocessor (it should be probably change in the future because it is too slow)
+Example of coffee preprocessor (it should be probably changed in the future because it is too slow)
 
 Waiting
 -------

@@ -49,12 +49,12 @@ namespace NSprockets.Tests
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var files = target.GetFiles(new string[]{ "test1.b.js" });
             Assert.AreEqual(6, files.Count);
-            Assert.AreEqual("test1.b.js", files[0]);
-            Assert.AreEqual("test1.1.a.js", files[1]);
-            Assert.AreEqual("test1.1.1.a.js", files[2]);
-            Assert.AreEqual("test1.1.1.b.js", files[3]);
-            Assert.AreEqual("test1.2.a.js", files[4]);
-            Assert.AreEqual("test1.2.b.js", files[5]);
+            Assert.AreEqual("test1.b.js", Path.GetFileName(files[0]));
+            Assert.AreEqual("test1.1.a.js", Path.GetFileName(files[1]));
+            Assert.AreEqual("test1.1.1.a.js", Path.GetFileName(files[2]));
+            Assert.AreEqual("test1.1.1.b.js", Path.GetFileName(files[3]));
+            Assert.AreEqual("test1.2.a.js", Path.GetFileName(files[4]));
+            Assert.AreEqual("test1.2.b.js", Path.GetFileName(files[5]));
         }
 
         [Test]
@@ -74,6 +74,7 @@ var test1_2_b = """";";
         }
 
         [Test]
+        [Explicit]
         public void GetContentTest2()
         {
             var target = new AssetLoader(_lookupDirectories, new[] { new CoffeeScriptProcessor() });
@@ -95,9 +96,29 @@ var test1_2_b = """";";
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var files = target.GetFiles("test1.a.js");
             Assert.AreEqual(2, files.Count);
-            Assert.AreEqual("test1.1.1.a.js", files[0]);
-            Assert.AreEqual("test1.a.js", files[1]);
+            Assert.AreEqual("test1.1.1.a.js", Path.GetFileName(files[0]));
+            Assert.AreEqual("test1.a.js", Path.GetFileName(files[1]));
         }
 
+        [Test]
+        public void GetContentTest4()
+        {
+            var target = new AssetLoader(_lookupDirectories, new [] {new TestAssetProcessor()});
+            var content = target.GetContent("test1.a.js");
+            Assert.AreEqual("AA", content);
+        }
+
+        private class TestAssetProcessor : IAssetProcessor
+        {
+            public bool IsForExtension(string extension)
+            {
+                return extension == ".js";
+            }
+
+            public void Parse(TextReader reader, IProcessorContext context)
+            {
+                context.Output.Write("A");
+            }
+        }
     }
 }

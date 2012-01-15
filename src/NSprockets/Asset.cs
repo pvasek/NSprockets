@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 using NSprockets.Abstract;
 
@@ -12,6 +11,11 @@ namespace NSprockets
         private Asset()
         {
             _children = new List<Asset>();
+        }
+
+        private Asset(IAssetLoader loader): this()
+        {
+            _loader = loader;
         }
 
         public Asset(IAssetLoader loader, string fileName, string rootDir)
@@ -28,13 +32,13 @@ namespace NSprockets
             var tmp = fileName.Remove(0, rootDir.Length);
             CheckType(AssetType.Css, tmp);
             CheckType(AssetType.Js, tmp);
+            FullFileName = FullFileName.Replace("\\", "/");
         }
 
         private bool _loaded = false;
-        private object _syncRoot = new Object();
+        private readonly object _syncRoot = new Object();
         private readonly IAssetLoader _loader;
         private readonly List<Asset> _children;
-        private string _finalExtension;
 
         private void CheckType(AssetType type, string file)
         {
@@ -43,10 +47,13 @@ namespace NSprockets
             if (tmp.EndsWith(rootExtension) || tmp.Contains(rootExtension + "."))
             {
                 Type = type;
-                _finalExtension = "." + Type.ToString().ToLower();
-                int extensionStart = tmp.IndexOf(rootExtension);
+                int extensionStart = tmp.IndexOf(rootExtension, StringComparison.OrdinalIgnoreCase);
                 Extension = tmp.Substring(extensionStart, tmp.Length - extensionStart);
-                var name = Path.GetFileName(tmp); 
+                var name = Path.GetFileName(tmp);
+                if (name == null)
+                {
+                    throw new ArgumentException("File doesn't exists");
+                }
                 Name = name.Remove(name.Length - Extension.Length, Extension.Length);
                 FileName = Name + rootExtension;
                 var path = Path.GetDirectoryName(tmp).Replace(@"\", "/");
@@ -74,7 +81,7 @@ namespace NSprockets
         {
             IsManifestOnly = true;
 
-            var result = new Asset();
+            var result = new Asset(_loader);
             result.Name = Name;
             result.FileName = FileName;
             result.Extension = Extension;
@@ -83,6 +90,7 @@ namespace NSprockets
             result.Type = Type;
             result.DirectoryParts = new List<string>(DirectoryParts);
             result.Content = Content;
+            result.ProcessContent();
             return result;
         }
 
@@ -117,24 +125,31 @@ namespace NSprockets
                     Parse(parser);
                 }
                 ProcessContent();
+                _loaded = true;
                 return this;
             }
         }
 
         private void ProcessContent()
         {
-            if (Extension != _finalExtension)
+            if (_loader != null && Extension.Contains("."))
             {
                 var parts = Extension.Split('.')
                     .Where(i => !String.IsNullOrWhiteSpace(i))
-                    .Select(i => "." + i);
-                var processor = _loader.FindProcessor(parts.Reverse().First());
-                var processorContext = new ProcessorContext();
-                processor.Parse(new StringReader(Content), processorContext);
-                Extension = String.Join("", parts.Reverse().Skip(1).Reverse().ToArray());
-                Content = processorContext.Output.ToString();
+                    .Select(i => "." + i)
+                    .Reverse()
+                    .ToList();
+
+                var processor = _loader.FindProcessor(parts.First());
+                if (processor != null)
+                {
+                    var processorContext = new ProcessorContext();
+                    processor.Parse(new StringReader(Content), processorContext);                    
+                    Content = processorContext.Output.ToString();
+                }
+                Extension = String.Join("", parts.Skip(1).Reverse().ToArray());
                 ProcessContent();
-            }
+            }            
         }
 
         private void Parse(DirectiveParser parser)
