@@ -36,7 +36,7 @@ namespace NSprockets
 
         #endregion
 
-        private static bool IsConfigurationKeySet(string key, bool defaultValue)
+        private static bool GetConfigurationAsBool(string key, bool defaultValue)
         {
             string value = ConfigurationManager.AppSettings[key];
             if (value == null)
@@ -46,16 +46,24 @@ namespace NSprockets
             return value == "1" || String.Compare(value, "true", StringComparison.CurrentCultureIgnoreCase) == 0;
         }
 
+        private static string GetConfigurationAsString(string key, string defaultValue)
+        {
+            return ConfigurationManager.AppSettings[key] ?? defaultValue;
+        }
+
         static NSprocketsTool()
         {
             Current = new NSprocketsTool();
             if (HttpContext.Current != null)
-            {
-                Current.AddServerLookupDirectory("~/scripts");
+            {                
                 Current.ApplicationRootDirectory = HttpContext.Current.Server.MapPath("~/");
-                Current.OutputDirectory = HttpContext.Current.Server.MapPath("~/scripts");
-                Current.ConcatToSingleFile = IsConfigurationKeySet("NSprockets.ConcatToSingleFile", true);
-                Current.Minify = IsConfigurationKeySet("NSprockets.Minify", true);
+                Current.ConcatToSingleFile = GetConfigurationAsBool("NSprockets.ConcatToSingleFile", true);
+                Current.Minify = GetConfigurationAsBool("NSprockets.Minify", true);
+                Current.SetWebOutputDirectory(GetConfigurationAsString("NSprockets.OutputDirectory", "~/scripts"));
+                foreach (string dir in GetConfigurationAsString("NSprockets.LookupDirectories", "~/scripts").Split(','))
+                {
+                    Current.AddServerLookupDirectory(dir);
+                }                
             }
         }
 
@@ -92,6 +100,11 @@ namespace NSprockets
         public void AddServerLookupDirectory(string virtualPath)
         {
             LookupDirectories.Add(HttpContext.Current.Server.MapPath(virtualPath));
+        }
+
+        public void SetWebOutputDirectory(string virtualPath)
+        {
+            OutputDirectory = HttpContext.Current.Server.MapPath(GetConfigurationAsString("NSprockets.OutputDirectory", "~/scripts"));
         }
 
         public IHtmlString GetScriptFileDeclaration(params string[] files)

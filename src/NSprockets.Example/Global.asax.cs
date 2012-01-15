@@ -27,6 +27,13 @@ namespace NSprockets.Example
 
         protected void Application_Start()
         {
+            // we use web.config configuration
+            //NSprocketsTool.Current.ConcatToSingleFile = true;
+            //NSprocketsTool.Current.Minify = false;
+            //NSprocketsTool.Current.SetWebOutputDirectory("~/scripts");
+            //NSprocketsTool.Current.AddServerLookupDirectory("~/scripts");
+            //NSprocketsTool.Current.AddServerLookupDirectory("~/scripts2");
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
