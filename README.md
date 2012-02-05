@@ -32,7 +32,7 @@ In your web project change post-build event (Project->Properties->Build events t
 
     $(TargetDir)\nsproc.exe $(TargetDir)\..\scripts\application.js $(TargetDir)\..\scripts\ -minify
 
-It will generate application_<hash>.js file to the scripts directory. The hash is calculated from the content of
+It will generate application_&lt;hash&gt;.js file to the scripts directory. The hash is calculated from the content of
 all the files included in the main application.js file.
 
 Configuration
