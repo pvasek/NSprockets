@@ -8,7 +8,7 @@ namespace NSprockets.Processors
         private readonly CoffeeCompiler _compiler = new CoffeeCompiler();
         private readonly object _syncRoot = new object();
 
-        public CoffeeScriptProcessor() : base(".coffee"){}
+        public CoffeeScriptProcessor() : base("coffee"){}
         
         public override void Parse(System.IO.TextReader reader, IProcessorContext context)
         {
@@ -16,6 +16,11 @@ namespace NSprockets.Processors
             {
                 context.Output.Write(_compiler.CompileString(reader.ReadToEnd()));
             }
+        }
+
+        public override DirectiveParser Parser
+        {
+            get { return new DirectiveParser("#=="); }
         }
     }
 }

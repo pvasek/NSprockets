@@ -6,5 +6,6 @@ namespace NSprockets.Abstract
     {
         bool IsForFile(AssetFile file);
         void Parse(TextReader reader, IProcessorContext context);
+        DirectiveParser Parser { get; }
     }
 }

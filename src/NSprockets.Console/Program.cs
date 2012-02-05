@@ -25,9 +25,9 @@ namespace NSprockets.Console
                 .Concat(new[] {Path.GetDirectoryName(inputFile)})
                 .Distinct();
 
-            tool.LookupDirectories.AddRange(lookupDirectories);
+            AssetPipeline.LookupDirectories.AddRange(lookupDirectories);
             
-            tool.Minify = minify;
+            AssetPipeline.MinifyJs = minify;
             tool.Generate(Path.GetFileName(inputFile));
         }
     }

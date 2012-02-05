@@ -8,7 +8,7 @@ namespace NSprockets
 {
     public class AssetLoader : IAssetLoader
     {
-        public AssetLoader(IEnumerable<string> lookupDirectories, IEnumerable<IAssetProcessor> processors)
+        public AssetLoader(IEnumerable<string> lookupDirectories)
         {
             Assets = new List<Asset>();
             _lookupDirectories = new List<string>(lookupDirectories);
@@ -16,10 +16,8 @@ namespace NSprockets
             {
                 WalkThrough(dir, dir);
             }
-            _processors = new List<IAssetProcessor>(processors);
         }
 
-        private readonly List<IAssetProcessor> _processors;
         private readonly List<string> _lookupDirectories;
 
         private void WalkThrough(string dir, string rootDir)
@@ -89,7 +87,7 @@ namespace NSprockets
 
         public List<IAssetProcessor> FindProcessors(AssetFile file)
         {
-            return _processors.Where(i => i.IsForFile(file)).ToList();
+            return AssetPipeline.Processors.Where(i => i.IsForFile(file)).ToList();
         }
     }
 }

@@ -20,5 +20,7 @@ namespace NSprockets.Processors
         }
 
         public abstract void Parse(TextReader reader, IProcessorContext context);
+
+        public abstract DirectiveParser Parser { get; }
     }
 }

@@ -46,7 +46,7 @@ namespace NSprockets
                 if (_loaded) return this;
 
                 Content = System.IO.File.ReadAllText(File.OriginalFile);
-                var parser = DirectiveParser.ForType(File.Type);
+                var parser = _loader.FindProcessors(File).Select(i => i.Parser).Concat(DirectiveParser.DefaultParsers).FirstOrDefault();
                 if (parser != null)
                 {
                     Parse(parser);

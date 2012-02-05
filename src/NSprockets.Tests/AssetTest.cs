@@ -55,6 +55,11 @@ namespace NSprockets.Tests
             {
                 context.Output.Write("coffee");
             }
+
+            public DirectiveParser Parser
+            {
+                get { return DirectiveParser.JsParser; }
+            }
         }
     }
 }

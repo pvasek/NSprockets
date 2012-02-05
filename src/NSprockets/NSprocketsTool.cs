@@ -13,13 +13,6 @@ namespace NSprockets
     public class NSprocketsTool
     {
 
-        public NSprocketsTool()
-        {
-            LookupDirectories = new List<string>();
-            Processors = new List<IAssetProcessor>();
-            Processors.Add(new CoffeeScriptProcessor());
-        }
-
         #region Private Members 
 
         private readonly object _syncRoot = new object();
@@ -31,7 +24,7 @@ namespace NSprockets
 
         private AssetLoader GetLoader()
         {
-            return new AssetLoader(LookupDirectories, GetAllProcessors());
+            return new AssetLoader(AssetPipeline.LookupDirectories);
         }
 
         #endregion
@@ -58,7 +51,7 @@ namespace NSprockets
             {                
                 Current.ApplicationRootDirectory = HttpContext.Current.Server.MapPath("~/");
                 Current.ConcatToSingleFile = GetConfigurationAsBool("NSprockets.ConcatToSingleFile", true);
-                Current.Minify = GetConfigurationAsBool("NSprockets.Minify", true);
+                AssetPipeline.MinifyJs = GetConfigurationAsBool("NSprockets.Minify", true);
                 Current.SetWebOutputDirectory(GetConfigurationAsString("NSprockets.OutputDirectory", "~/scripts"));
                 foreach (string dir in GetConfigurationAsString("NSprockets.LookupDirectories", "~/scripts").Split(','))
                 {
@@ -67,25 +60,10 @@ namespace NSprockets
             }
         }
 
-        private IEnumerable<IAssetProcessor> GetAllProcessors()
-        {
-            if (Minify)
-            {
-                yield return new JsMinifierProcessor();
-            }
-            foreach (var processor in Processors)
-            {
-                yield return processor;
-            }
-        }
-
         public static NSprocketsTool Current { get; set; }
 
-        public List<string> LookupDirectories { get; private set; }
         public string OutputDirectory { get; set; }        
-        public List<IAssetProcessor> Processors { get; private set; }
         public bool ConcatToSingleFile { get; set; }
-        public bool Minify { get; set; }       
 
         private string _applicationRootDirectory;
         public string ApplicationRootDirectory
@@ -99,7 +77,7 @@ namespace NSprockets
 
         public void AddServerLookupDirectory(string virtualPath)
         {
-            LookupDirectories.Add(HttpContext.Current.Server.MapPath(virtualPath));
+            AssetPipeline.AddServerLookupDirectory(virtualPath);
         }
 
         public void SetWebOutputDirectory(string virtualPath)

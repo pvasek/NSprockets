@@ -61,7 +61,7 @@
     <Compile Include="Abstract\IProcessorContext.cs" />
     <Compile Include="NSprocketsTool.cs" />
     <Compile Include="DirectiveParser.cs" />
-    <Compile Include="Processors\JsMinifierProcessor.cs" />
+    <Compile Include="Processors\JsProcessor.cs" />
     <Compile Include="Processors\ProcessorBase.cs" />
     <Compile Include="ProcessorContext.cs" />
     <Compile Include="Processors\CoffeeScriptProcessor.cs" />

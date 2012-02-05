@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using NSprockets.Abstract;
 
 namespace NSprockets
@@ -9,6 +10,7 @@ namespace NSprockets
 
         public static DirectiveParser CssParser { get; private set; }
         public static DirectiveParser JsParser { get; private set; }
+        public static List<DirectiveParser> DefaultParsers { get; private set; }
 
         public static DirectiveParser ForType(AssetType assetType)
         {
@@ -23,6 +25,7 @@ namespace NSprockets
         {
             CssParser = new DirectiveParser("*=");
             JsParser = new DirectiveParser("//=");
+            DefaultParsers = new List<DirectiveParser> { CssParser, JsParser };
         }
 
         public DirectiveParser(string lineStart)
