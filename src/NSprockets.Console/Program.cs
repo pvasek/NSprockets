@@ -10,7 +10,7 @@ namespace NSprockets.Console
         {
             if (args.Length == 0)
             {
-                System.Console.WriteLine("Usage nsproc.exe <input file> [<output directory>] [-minify]");
+                System.Console.WriteLine("Usage nsproc.exe <input file> [<output directory>] [-l:lookupdirectory1] .. [-l:lookupdirectoryN] [-minify]");
                 return;
             }
             string inputFile = args[0];
@@ -18,7 +18,15 @@ namespace NSprockets.Console
 
             var tool = new NSprocketsTool();            
             tool.OutputDirectory = args.Length > 1 ? args[1] : Environment.CurrentDirectory;
-            tool.LookupDirectories.Add(Path.GetDirectoryName(inputFile));
+
+            var lookupDirectories = args
+                .Where(i => i.StartsWith("-l:"))
+                .Select(i => i.Remove(0, 3))
+                .Concat(new[] {Path.GetDirectoryName(inputFile)})
+                .Distinct();
+
+            tool.LookupDirectories.AddRange(lookupDirectories);
+            
             tool.Minify = minify;
             tool.Generate(Path.GetFileName(inputFile));
         }

@@ -11,7 +11,8 @@ namespace NSprockets
         public AssetLoader(IEnumerable<string> lookupDirectories, IEnumerable<IAssetProcessor> processors)
         {
             Assets = new List<Asset>();
-            foreach (var dir in lookupDirectories)
+            _lookupDirectories = new List<string>(lookupDirectories);
+            foreach (var dir in _lookupDirectories)
             {
                 WalkThrough(dir, dir);
             }
@@ -19,6 +20,7 @@ namespace NSprockets
         }
 
         private readonly List<IAssetProcessor> _processors;
+        private readonly List<string> _lookupDirectories;
 
         private void WalkThrough(string dir, string rootDir)
         {
@@ -33,17 +35,21 @@ namespace NSprockets
 
         public IEnumerable<Asset> FromTree(string dir)
         {
-            return Assets.Where(i => i.IsInTree(dir));
+            return Assets.Where(i => i.File.IsInTree(dir));
         }
 
         public IEnumerable<Asset> FromDirectory(string dir)
         {
-            return Assets.Where(i => i.IsInDirectory(dir));
+            return Assets.Where(i => i.File.IsInDirectory(dir));
         }
 
         public Asset Load(string name)
         {
-            Asset asset = Assets.First(i => i.HasName(name));
+            Asset asset = Assets.FirstOrDefault(i => i.File.HasName(name));
+            if (asset == null)
+            {
+                return null;
+            }
             return asset.Load();
         }
 
@@ -67,9 +73,9 @@ namespace NSprockets
         public List<string> GetFiles(IEnumerable<string> files)
         {
             var result = new List<string>();
-            foreach (var asset in files.Select(Load))
+            foreach (var asset in files.Select(Load).Where(i => i != null))
             {
-                ForAssetTree(asset, i => result.Add(i.FullFileName));
+                ForAssetTree(asset, i => result.Add(i.File.OriginalFile));
             }
             return result.Distinct().ToList();
         }
@@ -81,9 +87,9 @@ namespace NSprockets
             return result.ToString();
         }
 
-        public IAssetProcessor FindProcessor(string extension)
+        public List<IAssetProcessor> FindProcessors(AssetFile file)
         {
-            return _processors.FirstOrDefault(i => i.IsForExtension(extension));
+            return _processors.Where(i => i.IsForFile(file)).ToList();
         }
     }
 }

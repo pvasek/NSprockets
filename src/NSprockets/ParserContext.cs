@@ -8,9 +8,9 @@ namespace NSprockets
     public class ParserContext: IParserContext
     {
         private readonly Dictionary<string, DirectiveType> _typeMap = new Dictionary<string, DirectiveType>();
-        private readonly string _currentFile;        
+        private readonly AssetFile _currentFile;        
 
-        public ParserContext(string currentFile)
+        public ParserContext(AssetFile currentFile)
         {
             Directives = new List<Directive>();
             FilteredContent = new StringWriter();
@@ -34,7 +34,7 @@ namespace NSprockets
             
             if (directiveType == DirectiveType.RequireSelf)
             {
-                Directives.Add(new Directive(DirectiveType.RequireSelf, _currentFile));
+                Directives.Add(new Directive(DirectiveType.RequireSelf, _currentFile.Name));
             }
             else
             {

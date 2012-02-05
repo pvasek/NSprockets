@@ -7,7 +7,18 @@ namespace NSprockets
 {
     public static class Utils
     {
-         public static string GetHash(string content)
+
+        public static string NormalizePath(this string name)
+        {
+            var result = name.Replace("\\", "/").ToLower().Trim();
+            if (result.StartsWith("/"))
+                result = result.Substring(1, result.Length - 1);
+            if (result.EndsWith("/"))
+                result = result.Substring(0, result.Length - 1);
+            return result;
+        }
+
+        public static string GetHash(string content)
          {
              var hashAlg = MD5.Create();
              byte[] hashBytes = hashAlg.ComputeHash(Encoding.ASCII.GetBytes(content));

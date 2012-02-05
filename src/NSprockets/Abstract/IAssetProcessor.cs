@@ -4,7 +4,7 @@ namespace NSprockets.Abstract
 {
     public interface IAssetProcessor
     {
-        bool IsForExtension(string extension);
+        bool IsForFile(AssetFile file);
         void Parse(TextReader reader, IProcessorContext context);
     }
 }

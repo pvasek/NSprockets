@@ -7,6 +7,6 @@ namespace NSprockets.Abstract
         Asset Load(string name);
         IEnumerable<Asset> FromDirectory(string dir);
         IEnumerable<Asset> FromTree(string dir);
-        IAssetProcessor FindProcessor(string extension);
+        List<IAssetProcessor> FindProcessors(AssetFile file);
     }
 }

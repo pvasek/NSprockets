@@ -12,7 +12,7 @@ namespace NSprockets.Tests
         [Test]
         public void AddDirecitveTest()
         {
-            var target = new ParserContext("current.js");
+            var target = new ParserContext(new AssetFile("current.js", ""));
             target.AddDirective("require_self");
             target.AddDirective("require test1.js");
             target.AddDirective("require test2.js test3.js");

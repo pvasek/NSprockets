@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using System.IO;
 using NSprockets.Abstract;
@@ -9,6 +8,8 @@ using NSprockets.Processors;
 
 namespace NSprockets.Tests
 {
+    // ReSharper disable InconsistentNaming
+
     [TestFixture]
     public class AssetLoaderTest
     {
@@ -17,14 +18,16 @@ namespace NSprockets.Tests
         [SetUp]
         public void SetUp()
         {
-            Uri uri = new Uri(Path.GetDirectoryName(typeof(AssetLoaderTest).Assembly.CodeBase));
-            var dir = Path.Combine(uri.AbsolutePath, "assets");
+            var uri = new Uri(Path.GetDirectoryName(typeof(AssetLoaderTest).Assembly.CodeBase));
+            var dir1 = Path.Combine(uri.AbsolutePath, Path.Combine("assets", "scripts1"));
+            var dir2 = Path.Combine(uri.AbsolutePath, Path.Combine("assets", "scripts2"));
             _lookupDirectories = new List<string>();
-            _lookupDirectories.Add(dir);
+            _lookupDirectories.Add(dir1);
+            _lookupDirectories.Add(dir2);
         }
 
         [Test]
-        public void BasicTest()
+        public void Can_load_assets_from_directories()
         {
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             Assert.AreEqual(10, target.Assets.Count);
@@ -33,7 +36,7 @@ namespace NSprockets.Tests
         }
 
         [Test]
-        public void LoadTest()
+        public void Can_load_assest_from_single_file()
         {
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             Asset result1 = target.Load("test1.a.js");
@@ -44,7 +47,7 @@ namespace NSprockets.Tests
         }
 
         [Test]
-        public void GetFilesTest()
+        public void Get_all_file_names_for_asset()
         {
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var files = target.GetFiles(new string[]{ "test1.b.js" });
@@ -58,7 +61,15 @@ namespace NSprockets.Tests
         }
 
         [Test]
-        public void GetContentTest()
+        public void Doesnt_get_files_for_asset_which_is_not_on_lookup_path()
+        {
+            var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
+            var files = target.GetFiles(new string[] { "test1.1.a.js" });
+            Assert.AreEqual(0, files.Count);
+        }
+
+        [Test]
+        public void Get_all_content_for_asset()
         {
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var content = target.GetContent("test1.b.js");
@@ -75,7 +86,7 @@ var test1_2_b = """";";
 
         [Test]
         [Explicit]
-        public void GetContentTest2()
+        public void Get_all_content_for_asset_which_contains_coffeescript()
         {
             var target = new AssetLoader(_lookupDirectories, new[] { new CoffeeScriptProcessor() });
             var content = target.GetContent("test2.a.js");
@@ -83,7 +94,7 @@ var test1_2_b = """";";
         }
 
         [Test]
-        public void GetContentTest3()
+        public void Get_all_content_for_asset_containing_require_self()
         {
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var content = target.GetContent("test1.a.js");
@@ -91,7 +102,7 @@ var test1_2_b = """";";
         }
 
         [Test]
-        public void GetFilesTest3()
+        public void Get_all_files_for_asset_containing_require_self()
         {
             var target = new AssetLoader(_lookupDirectories, new IAssetProcessor[0]);
             var files = target.GetFiles("test1.a.js");
@@ -101,7 +112,7 @@ var test1_2_b = """";";
         }
 
         [Test]
-        public void GetContentTest4()
+        public void Get_all_content_for_asset_using_a_test_processor()
         {
             var target = new AssetLoader(_lookupDirectories, new [] {new TestAssetProcessor()});
             var content = target.GetContent("test1.a.js");
@@ -110,9 +121,9 @@ var test1_2_b = """";";
 
         private class TestAssetProcessor : IAssetProcessor
         {
-            public bool IsForExtension(string extension)
+            public bool IsForFile(AssetFile file)
             {
-                return extension == ".js";
+                return file.Extension == ".js";
             }
 
             public void Parse(TextReader reader, IProcessorContext context)
@@ -121,4 +132,5 @@ var test1_2_b = """";";
             }
         }
     }
+    // ReSharper restore InconsistentNaming
 }

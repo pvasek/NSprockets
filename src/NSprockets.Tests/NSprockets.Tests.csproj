@@ -47,6 +47,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssetFileTest.cs" />
     <Compile Include="AssetTest.cs" />
     <Compile Include="DirectiveParserTest.cs" />
     <Compile Include="AssetLoaderTest.cs" />

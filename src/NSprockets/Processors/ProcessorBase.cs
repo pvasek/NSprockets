@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using NSprockets.Abstract;
 
 namespace NSprockets.Processors
@@ -10,12 +11,12 @@ namespace NSprockets.Processors
 
         protected ProcessorBase(string extension)
         {
-            _extension = extension;
+            _extension = extension.NormalizePath();
         }
 
-        public bool IsForExtension(string extension)
+        public bool IsForFile(AssetFile file)
         {
-            return String.Compare(_extension, extension, StringComparison.OrdinalIgnoreCase) == 0;
+            return file.Extensions.Any(i => i == _extension);
         }
 
         public abstract void Parse(TextReader reader, IProcessorContext context);
